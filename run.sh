@@ -1,3 +1,3 @@
-cc broccolisp.c -o broccolisp -lraylib -lm
+cc main.c -o broccolisp -lraylib -lm
 ./broccolisp
 rm broccolisp
