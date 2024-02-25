@@ -23,11 +23,22 @@ atom bl_int(long x) {
   return a;
 }
 
-atom bl_sym(const char *s) {
-  atom a;
+static atom sym_table = {NIL};
 
+atom bl_sym(const char *s) {
+  atom a, p;
+
+  p = sym_table;
+  while (p.type != NIL) {
+    a = head(p);
+    if (strcmp(a.value.symbol, s) == 0) {
+      return a;
+    }
+    p = tail(p);
+  }
   a.type = SYMBOL;
   a.value.symbol = strdup(s);
+  sym_table = bl_pair(a, sym_table);
 
   return a;
 }
