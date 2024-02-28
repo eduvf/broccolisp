@@ -1,6 +1,8 @@
 #ifndef LISP
 #define LISP
 
+typedef enum { NO_ERR, SYNTAX_ERR } error_type;
+
 struct atom {
   enum {
     NIL,
