@@ -2,20 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-atom bl_pair(atom head, atom tail) {
-  atom p;
+atom_type bl_pair(atom_type head, atom_type tail) {
+  atom_type p;
 
   p.type = PAIR;
   p.value.pair = malloc(sizeof(struct pair));
 
-  head(p) = head;
-  tail(p) = tail;
+  head_macro(p) = head;
+  tail_macro(p) = tail;
 
   return p;
 }
 
-atom bl_int(long x) {
-  atom a;
+atom_type bl_int(long x) {
+  atom_type a;
 
   a.type = INTEGER;
   a.value.integer = x;
@@ -23,18 +23,18 @@ atom bl_int(long x) {
   return a;
 }
 
-static atom sym_table = {NIL};
+static atom_type sym_table = {NIL};
 
-atom bl_sym(const char *s) {
-  atom a, p;
+atom_type bl_sym(const char *s) {
+  atom_type a, p;
 
   p = sym_table;
   while (p.type != NIL) {
-    a = head(p);
+    a = head_macro(p);
     if (strcmp(a.value.symbol, s) == 0) {
       return a;
     }
-    p = tail(p);
+    p = tail_macro(p);
   }
   a.type = SYMBOL;
   a.value.symbol = strdup(s);

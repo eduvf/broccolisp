@@ -1,20 +1,20 @@
 #include "lisp.h"
 #include <stdio.h>
 
-void bl_print(atom atom) {
+void bl_print(atom_type atom) {
   switch (atom.type) {
   case NIL:
     printf("()");
     break;
   case PAIR:
     putchar('(');
-    bl_print(head(atom));
-    atom = tail(atom);
+    bl_print(head_macro(atom));
+    atom = tail_macro(atom);
     while (atom.type != NIL) {
       if (atom.type == PAIR) {
         putchar(' ');
-        bl_print(head(atom));
-        atom = tail(atom);
+        bl_print(head_macro(atom));
+        atom = tail_macro(atom);
       } else {
         printf(" . ");
         bl_print(atom);

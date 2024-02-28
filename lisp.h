@@ -20,11 +20,11 @@ struct pair {
   struct atom tail;
 };
 
-typedef struct atom atom;
+typedef struct atom atom_type;
 
-static const atom nil = {};
+static const atom_type nil = {};
 
-#define head(p) ((p).value.pair->head)
-#define tail(p) ((p).value.pair->tail)
+#define head_macro(p) ((p).value.pair->head)
+#define tail_macro(p) ((p).value.pair->tail)
 
 #endif
