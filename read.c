@@ -110,3 +110,21 @@ int bl_parse_list(const char *from, const char **to, atom_type *result) {
     }
   }
 }
+
+int bl_read(const char *input, const char **to, atom_type *result) {
+  const char *token;
+  error_type err;
+
+  err = bl_lex(input, &token, to);
+  if (err) {
+    return err;
+  }
+
+  if (token[0] == '(') {
+    return bl_parse_list(*to, to, result);
+  } else if (token[0] == ')') {
+    return SYNTAX_ERR;
+  } else {
+    return bl_parse_atom(token, *to, result);
+  }
+}
