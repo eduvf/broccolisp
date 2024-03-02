@@ -1,4 +1,6 @@
 #include "lisp.h"
+#include <ctype.h>
+#include <stdlib.h>
 #include <string.h>
 
 int bl_lex(const char *s, const char **from, const char **to) {
@@ -21,5 +23,34 @@ int bl_lex(const char *s, const char **from, const char **to) {
     *to = s + strcspn(s, delimiter);
   }
 
+  return NO_ERR;
+}
+
+int bl_parse_atom(const char *from, const char *to, atom_type *result) {
+  char *buffer;
+  char *p;
+
+  long value = strtol(from, &p, 10);
+  if (p == to) {
+    result->type = INTEGER;
+    result->value.integer = value;
+    return NO_ERR;
+  }
+
+  buffer = malloc(to - from + 1);
+  p = buffer;
+  while (from != to) {
+    // FIX
+    *p++ = tolower(*from), ++from;
+  }
+  *p = '\0';
+
+  if (strcmp(buffer, "nil") == 0) {
+    *result = nil;
+  } else {
+    *result = bl_sym(buffer);
+  }
+
+  free(buffer);
   return NO_ERR;
 }
