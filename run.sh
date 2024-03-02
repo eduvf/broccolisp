@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cc main.c -o broccolisp -lraylib -lm
+cc *.c -o broccolisp -lraylib -lm -lreadline
 ./broccolisp
 rm broccolisp

@@ -1,21 +1,32 @@
 // #include "raylib.h"
 // #include <stdbool.h>
-#include "data.c"
-#include "print.c"
+#include "lisp.h"
+#include <readline/readline.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main() {
-  char c;
+  char *input;
 
-  bl_print(bl_int(42));
-  putchar('\n');
-  bl_print(bl_pair(bl_int(1), bl_pair(bl_int(2), bl_pair(bl_int(3), nil))));
-  putchar('\n');
-  bl_print(bl_pair(bl_sym("p"), bl_pair(bl_sym("q"), bl_sym("r"))));
-  putchar('\n');
+  while ((input = readline("? ")) != NULL) {
+    const char *p = input;
+    error_type err;
+    atom_type expr;
 
-  printf("?");
-  scanf("%c", &c);
+    err = bl_read(p, &p, &expr);
+
+    switch (err) {
+    case NO_ERR:
+      bl_print(expr);
+      puts("");
+      break;
+    case SYNTAX_ERR:
+      puts("(!) Syntax error");
+      break;
+    }
+
+    free(input);
+  }
 
   return 0;
 }
