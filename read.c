@@ -73,7 +73,7 @@ int bl_parse_list(const char *from, const char **to, atom_type *result) {
     }
 
     if (token[0] == ')') {
-      return SYNTAX_ERR;
+      return NO_ERR;
     }
 
     if (token[0] == '.' && *to - token == 1) {
