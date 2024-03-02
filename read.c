@@ -54,3 +54,59 @@ int bl_parse_atom(const char *from, const char *to, atom_type *result) {
   free(buffer);
   return NO_ERR;
 }
+
+int bl_parse_list(const char *from, const char **to, atom_type *result) {
+  atom_type p;
+
+  *to = from;
+  p = nil;
+  *result = nil;
+
+  for (;;) {
+    const char *token;
+    atom_type atom;
+    error_type err;
+
+    err = bl_lex(*to, &token, to);
+    if (err) {
+      return err;
+    }
+
+    if (token[0] == ')') {
+      return SYNTAX_ERR;
+    }
+
+    if (token[0] == '.' && *to - token == 1) {
+      if (p.type == NIL) {
+        return SYNTAX_ERR;
+      }
+
+      err = bl_read(*to, to, &atom);
+      if (err) {
+        return err;
+      }
+
+      tail_macro(p) = atom;
+
+      err = bl_lex(*to, &token, to);
+      if (!err && token[0] != ')') {
+        err = SYNTAX_ERR;
+      }
+
+      return err;
+    }
+
+    err = bl_read(token, to, &atom);
+    if (err) {
+      return err;
+    }
+
+    if (p.type == NIL) {
+      *result = bl_pair(atom, nil);
+      p = *result;
+    } else {
+      tail_macro(p) = bl_pair(atom, nil);
+      p = tail_macro(p);
+    }
+  }
+}
