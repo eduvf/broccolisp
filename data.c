@@ -66,3 +66,22 @@ int bl_get(atom_type env, atom_type sym, atom_type *result) {
   }
   return bl_get(outer, sym, result);
 }
+
+int bl_set(atom_type env, atom_type sym, atom_type value) {
+  atom_type current = tail_macro(env);
+  atom_type binding = nil;
+
+  while (current.type != NIL) {
+    binding = head_macro(current);
+    if (head_macro(binding).value.symbol == sym.value.symbol) {
+      tail_macro(binding) = value;
+      return NO_ERR;
+    }
+    current = tail_macro(current);
+  }
+
+  binding = bl_pair(sym, value);
+  tail_macro(env) = bl_pair(binding, tail_macro(env));
+
+  return NO_ERR;
+}

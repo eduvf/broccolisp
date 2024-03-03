@@ -35,6 +35,7 @@ atom_type bl_sym(const char *s);
 atom_type bl_env(atom_type outer);
 
 int bl_get(atom_type env, atom_type sym, atom_type *result);
+int bl_set(atom_type env, atom_type sym, atom_type value);
 
 int bl_lex(const char *s, const char **from, const char **to);
 int bl_parse_atom(const char *from, const char *to, atom_type *result);
