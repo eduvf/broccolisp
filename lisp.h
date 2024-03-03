@@ -32,6 +32,7 @@ static const atom_type nil = {};
 atom_type bl_pair(atom_type head, atom_type tail);
 atom_type bl_int(long x);
 atom_type bl_sym(const char *s);
+atom_type bl_env(atom_type outer);
 
 int bl_lex(const char *s, const char **from, const char **to);
 int bl_parse_atom(const char *from, const char *to, atom_type *result);

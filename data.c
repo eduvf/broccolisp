@@ -42,3 +42,8 @@ atom_type bl_sym(const char *s) {
 
   return a;
 }
+
+atom_type bl_env(atom_type outer) {
+  // create empty environment
+  return bl_pair(outer, nil);
+}
