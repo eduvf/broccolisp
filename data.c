@@ -47,3 +47,22 @@ atom_type bl_env(atom_type outer) {
   // create empty environment
   return bl_pair(outer, nil);
 }
+
+int bl_get(atom_type env, atom_type sym, atom_type *result) {
+  atom_type outer = head_macro(env);
+  atom_type current = tail_macro(env);
+
+  while (current.type != NIL) {
+    atom_type binding = head_macro(current);
+    if (head_macro(binding).value.symbol == sym.value.symbol) {
+      *result = tail_macro(binding);
+      return NO_ERR;
+    }
+    current = tail_macro(current);
+  }
+
+  if (outer.type == NIL) {
+    return UNDEFINED_SYMBOL_ERR;
+  }
+  return bl_get(outer, sym, result);
+}

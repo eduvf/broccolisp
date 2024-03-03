@@ -1,7 +1,7 @@
 #ifndef LISP
 #define LISP
 
-typedef enum { NO_ERR, SYNTAX_ERR } error_type;
+typedef enum { NO_ERR, SYNTAX_ERR, UNDEFINED_SYMBOL_ERR } error_type;
 
 struct atom {
   enum {
@@ -33,6 +33,8 @@ atom_type bl_pair(atom_type head, atom_type tail);
 atom_type bl_int(long x);
 atom_type bl_sym(const char *s);
 atom_type bl_env(atom_type outer);
+
+int bl_get(atom_type env, atom_type sym, atom_type *result);
 
 int bl_lex(const char *s, const char **from, const char **to);
 int bl_parse_atom(const char *from, const char *to, atom_type *result);
