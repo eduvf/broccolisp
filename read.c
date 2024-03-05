@@ -3,128 +3,137 @@
 #include <stdlib.h>
 #include <string.h>
 
-int bl_lex(const char *s, const char **from, const char **to) {
+int fn_lex(const char *string, const char **start, const char **end) {
   const char *whitespace = " \t\n";
   const char *delimiter = "() \t\n";
 
-  s += strspn(s, whitespace);
+  // consume whitespace
+  string += strspn(string, whitespace);
 
-  if (s[0] == '\0') {
-    *from = NULL;
-    *to = NULL;
-    return SYNTAX_ERR;
+  // check for empty string
+  if (string[0] == '\0') {
+    *start = NULL;
+    *end = NULL;
+    return SYNTAX_ERROR;
   }
 
-  *from = s;
+  // adjust start pointer
+  *start = string;
 
-  if (s[0] == '(' || s[0] == ')') {
-    *to = s + 1;
+  if (string[0] == '(' || string[0] == ')') {
+    // capture parentheses
+    *end = string + 1;
   } else {
-    *to = s + strcspn(s, delimiter);
+    // capture symbol or number
+    *end = string + strcspn(string, delimiter);
   }
 
-  return NO_ERR;
+  return NO_ERROR;
 }
 
-int bl_parse_atom(const char *from, const char *to, atom_type *result) {
+int fn_parse_atom(const char *start, const char *end, type_atom *result) {
   char *buffer;
-  char *p;
+  char *pair;
 
-  long value = strtol(from, &p, 10);
-  if (p == to) {
+  // check for number
+  long value = strtol(start, &pair, 10);
+  if (pair == end) {
     result->type = INTEGER;
     result->value.integer = value;
-    return NO_ERR;
+    return NO_ERROR;
   }
 
-  buffer = malloc(to - from + 1);
-  p = buffer;
-  while (from != to) {
+  // calculate buffer size based on pointers
+  buffer = malloc(end - start + 1);
+  pair = buffer;
+  while (start != end) {
     // FIX
-    *p++ = tolower(*from), ++from;
+    *pair++ = tolower(*start), ++start;
   }
-  *p = '\0';
+  // add null char to the end of the symbol
+  *pair = '\0';
 
+  // check for "nil", otherwise it's a symbol
   if (strcmp(buffer, "nil") == 0) {
     *result = nil;
   } else {
-    *result = bl_sym(buffer);
+    *result = fn_make_symbol(buffer);
   }
 
   free(buffer);
-  return NO_ERR;
+  return NO_ERROR;
 }
 
-int bl_parse_list(const char *from, const char **to, atom_type *result) {
-  atom_type p;
+int fn_parse_list(const char *start, const char **end, type_atom *result) {
+  type_atom pair;
 
-  *to = from;
-  p = nil;
+  *end = start;
+  pair = nil;
   *result = nil;
 
   for (;;) {
     const char *token;
-    atom_type atom;
-    error_type err;
+    type_atom atom;
+    type_error error;
 
-    err = bl_lex(*to, &token, to);
-    if (err) {
-      return err;
+    error = fn_lex(*end, &token, end);
+    if (error) {
+      return error;
     }
 
     if (token[0] == ')') {
-      return NO_ERR;
+      return NO_ERROR;
     }
 
-    if (token[0] == '.' && *to - token == 1) {
-      if (p.type == NIL) {
-        return SYNTAX_ERR;
+    if (token[0] == '.' && *end - token == 1) {
+      if (pair.type == NIL) {
+        return SYNTAX_ERROR;
       }
 
-      err = bl_read(*to, to, &atom);
-      if (err) {
-        return err;
+      error = fn_read(*end, end, &atom);
+      if (error) {
+        return error;
       }
 
-      tail_macro(p) = atom;
+      tail(pair) = atom;
 
-      err = bl_lex(*to, &token, to);
-      if (!err && token[0] != ')') {
-        err = SYNTAX_ERR;
+      error = fn_lex(*end, &token, end);
+      if (!error && token[0] != ')') {
+        error = SYNTAX_ERROR;
       }
 
-      return err;
+      return error;
     }
 
-    err = bl_read(token, to, &atom);
-    if (err) {
-      return err;
+    error = fn_read(token, end, &atom);
+    if (error) {
+      return error;
     }
 
-    if (p.type == NIL) {
-      *result = bl_pair(atom, nil);
-      p = *result;
+    if (pair.type == NIL) {
+      *result = fn_make_pair(atom, nil);
+      pair = *result;
     } else {
-      tail_macro(p) = bl_pair(atom, nil);
-      p = tail_macro(p);
+      tail(pair) = fn_make_pair(atom, nil);
+      pair = tail(pair);
     }
   }
 }
 
-int bl_read(const char *input, const char **to, atom_type *result) {
+int fn_read(const char *input, const char **end, type_atom *result) {
   const char *token;
-  error_type err;
+  type_error error;
 
-  err = bl_lex(input, &token, to);
-  if (err) {
-    return err;
+  error = fn_lex(input, &token, end);
+  if (error) {
+    return error;
   }
 
   if (token[0] == '(') {
-    return bl_parse_list(*to, to, result);
+    return fn_parse_list(*end, end, result);
   } else if (token[0] == ')') {
-    return SYNTAX_ERR;
+    return SYNTAX_ERROR;
   } else {
-    return bl_parse_atom(token, *to, result);
+    return fn_parse_atom(token, *end, result);
   }
 }

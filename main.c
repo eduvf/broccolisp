@@ -10,20 +10,20 @@ int main() {
 
   while ((input = readline("? ")) != NULL) {
     const char *p = input;
-    error_type err;
-    atom_type expr;
+    type_error error;
+    type_atom expr;
 
-    err = bl_read(p, &p, &expr);
+    error = fn_read(p, &p, &expr);
 
-    switch (err) {
-    case NO_ERR:
-      bl_print(expr);
+    switch (error) {
+    case NO_ERROR:
+      fn_print(expr);
       puts("");
       break;
-    case SYNTAX_ERR:
+    case SYNTAX_ERROR:
       puts("(!) Syntax error");
       break;
-    case UNDEFINED_SYMBOL_ERR:
+    case UNDEFINED_SYMBOL_ERROR:
       puts("(!) Undefined symbol error");
       break;
     }

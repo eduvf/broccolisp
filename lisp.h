@@ -1,9 +1,9 @@
 #ifndef LISP
 #define LISP
 
-typedef enum { NO_ERR, SYNTAX_ERR, UNDEFINED_SYMBOL_ERR } error_type;
+typedef enum { NO_ERROR, SYNTAX_ERROR, UNDEFINED_SYMBOL_ERROR } type_error;
 
-struct atom {
+struct struct_atom {
   enum {
     NIL,
     PAIR,
@@ -11,37 +11,37 @@ struct atom {
     INTEGER,
   } type;
   union {
-    struct pair *pair;
+    struct struct_pair *pair;
     const char *symbol;
     long integer;
   } value;
 };
 
-struct pair {
-  struct atom head;
-  struct atom tail;
+struct struct_pair {
+  struct struct_atom head;
+  struct struct_atom tail;
 };
 
-typedef struct atom atom_type;
+typedef struct struct_atom type_atom;
 
-static const atom_type nil = {};
+static const type_atom nil = {};
 
-#define head_macro(p) ((p).value.pair->head)
-#define tail_macro(p) ((p).value.pair->tail)
+#define head(p) ((p).value.pair->head)
+#define tail(p) ((p).value.pair->tail)
 
-atom_type bl_pair(atom_type head, atom_type tail);
-atom_type bl_int(long x);
-atom_type bl_sym(const char *s);
-atom_type bl_env(atom_type outer);
+type_atom fn_make_pair(type_atom head, type_atom tail);
+type_atom fn_make_int(long integer);
+type_atom fn_make_symbol(const char *string);
+type_atom fn_make_env(type_atom outer);
 
-int bl_get(atom_type env, atom_type sym, atom_type *result);
-int bl_set(atom_type env, atom_type sym, atom_type value);
+int fn_get_from_env(type_atom env, type_atom symbol, type_atom *result);
+int fn_set_into_env(type_atom env, type_atom symbol, type_atom value);
 
-int bl_lex(const char *s, const char **from, const char **to);
-int bl_parse_atom(const char *from, const char *to, atom_type *result);
-int bl_parse_list(const char *from, const char **to, atom_type *result);
-int bl_read(const char *input, const char **to, atom_type *result);
+int fn_lex(const char *string, const char **start, const char **end);
+int fn_parse_atom(const char *start, const char *end, type_atom *result);
+int fn_parse_list(const char *start, const char **end, type_atom *result);
+int fn_read(const char *input, const char **end, type_atom *result);
 
-void bl_print(atom_type atom);
+void fn_print(type_atom atom);
 
 #endif

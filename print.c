@@ -1,23 +1,23 @@
 #include "lisp.h"
 #include <stdio.h>
 
-void bl_print(atom_type atom) {
+void fn_print(type_atom atom) {
   switch (atom.type) {
   case NIL:
     printf("()");
     break;
   case PAIR:
     putchar('(');
-    bl_print(head_macro(atom));
-    atom = tail_macro(atom);
+    fn_print(head(atom));
+    atom = tail(atom);
     while (atom.type != NIL) {
       if (atom.type == PAIR) {
         putchar(' ');
-        bl_print(head_macro(atom));
-        atom = tail_macro(atom);
+        fn_print(head(atom));
+        atom = tail(atom);
       } else {
         printf(" . ");
-        bl_print(atom);
+        fn_print(atom);
         break;
       }
     }

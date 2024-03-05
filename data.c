@@ -2,86 +2,86 @@
 #include <stdlib.h>
 #include <string.h>
 
-atom_type bl_pair(atom_type head, atom_type tail) {
-  atom_type p;
+type_atom fn_make_pair(type_atom head, type_atom tail) {
+  type_atom pair;
 
-  p.type = PAIR;
-  p.value.pair = malloc(sizeof(struct pair));
+  pair.type = PAIR;
+  pair.value.pair = malloc(sizeof(struct struct_pair));
 
-  head_macro(p) = head;
-  tail_macro(p) = tail;
+  head(pair) = head;
+  tail(pair) = tail;
 
-  return p;
+  return pair;
 }
 
-atom_type bl_int(long x) {
-  atom_type a;
+type_atom fn_make_int(long integer) {
+  type_atom atom;
 
-  a.type = INTEGER;
-  a.value.integer = x;
+  atom.type = INTEGER;
+  atom.value.integer = integer;
 
-  return a;
+  return atom;
 }
 
-static atom_type sym_table = {NIL};
+static type_atom symbol_table = {NIL};
 
-atom_type bl_sym(const char *s) {
-  atom_type a, p;
+type_atom fn_make_symbol(const char *string) {
+  type_atom atom, pair;
 
-  p = sym_table;
-  while (p.type != NIL) {
-    a = head_macro(p);
-    if (strcmp(a.value.symbol, s) == 0) {
-      return a;
+  pair = symbol_table;
+  while (pair.type != NIL) {
+    atom = head(pair);
+    if (strcmp(atom.value.symbol, string) == 0) {
+      return atom;
     }
-    p = tail_macro(p);
+    pair = tail(pair);
   }
-  a.type = SYMBOL;
-  a.value.symbol = strdup(s);
-  sym_table = bl_pair(a, sym_table);
+  atom.type = SYMBOL;
+  atom.value.symbol = strdup(string);
+  symbol_table = fn_make_pair(atom, symbol_table);
 
-  return a;
+  return atom;
 }
 
-atom_type bl_env(atom_type outer) {
+type_atom fn_make_env(type_atom outer) {
   // create empty environment
-  return bl_pair(outer, nil);
+  return fn_make_pair(outer, nil);
 }
 
-int bl_get(atom_type env, atom_type sym, atom_type *result) {
-  atom_type outer = head_macro(env);
-  atom_type current = tail_macro(env);
+int fn_get_from_env(type_atom env, type_atom symbol, type_atom *result) {
+  type_atom outer = head(env);
+  type_atom current = tail(env);
 
   while (current.type != NIL) {
-    atom_type binding = head_macro(current);
-    if (head_macro(binding).value.symbol == sym.value.symbol) {
-      *result = tail_macro(binding);
-      return NO_ERR;
+    type_atom binding = head(current);
+    if (head(binding).value.symbol == symbol.value.symbol) {
+      *result = tail(binding);
+      return NO_ERROR;
     }
-    current = tail_macro(current);
+    current = tail(current);
   }
 
   if (outer.type == NIL) {
-    return UNDEFINED_SYMBOL_ERR;
+    return UNDEFINED_SYMBOL_ERROR;
   }
-  return bl_get(outer, sym, result);
+  return fn_get_from_env(outer, symbol, result);
 }
 
-int bl_set(atom_type env, atom_type sym, atom_type value) {
-  atom_type current = tail_macro(env);
-  atom_type binding = nil;
+int fn_set_into_env(type_atom env, type_atom symbol, type_atom value) {
+  type_atom current = tail(env);
+  type_atom binding = nil;
 
   while (current.type != NIL) {
-    binding = head_macro(current);
-    if (head_macro(binding).value.symbol == sym.value.symbol) {
-      tail_macro(binding) = value;
-      return NO_ERR;
+    binding = head(current);
+    if (head(binding).value.symbol == symbol.value.symbol) {
+      tail(binding) = value;
+      return NO_ERROR;
     }
-    current = tail_macro(current);
+    current = tail(current);
   }
 
-  binding = bl_pair(sym, value);
-  tail_macro(env) = bl_pair(binding, tail_macro(env));
+  binding = fn_make_pair(symbol, value);
+  tail(env) = fn_make_pair(binding, tail(env));
 
-  return NO_ERR;
+  return NO_ERROR;
 }
