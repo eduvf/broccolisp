@@ -76,20 +76,24 @@ int fn_parse_list(const char *start, const char **end, type_atom *result) {
     type_atom atom;
     type_error error;
 
+    // lex a single token
     error = fn_lex(*end, &token, end);
     if (error) {
       return error;
     }
 
+    // closing paren ends the list
     if (token[0] == ')') {
       return NO_ERROR;
     }
 
+    // check if it's an explicit pair (x . y)
     if (token[0] == '.' && *end - token == 1) {
       if (pair.type == NIL) {
         return SYNTAX_ERROR;
       }
 
+      // read the tail of the pair
       error = fn_read(*end, end, &atom);
       if (error) {
         return error;
@@ -97,6 +101,7 @@ int fn_parse_list(const char *start, const char **end, type_atom *result) {
 
       tail(pair) = atom;
 
+      // check that the pair ends
       error = fn_lex(*end, &token, end);
       if (!error && token[0] != ')') {
         error = SYNTAX_ERROR;
@@ -105,15 +110,18 @@ int fn_parse_list(const char *start, const char **end, type_atom *result) {
       return error;
     }
 
+    // check if it's an atom
     error = fn_read(token, end, &atom);
     if (error) {
       return error;
     }
 
     if (pair.type == NIL) {
+      // end list
       *result = fn_make_pair(atom, nil);
       pair = *result;
     } else {
+      // add atom to continue list
       tail(pair) = fn_make_pair(atom, nil);
       pair = tail(pair);
     }
