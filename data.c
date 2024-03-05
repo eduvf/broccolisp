@@ -26,7 +26,8 @@ type_atom fn_make_int(long integer) {
 static type_atom symbol_table = {NIL};
 
 type_atom fn_make_symbol(const char *string) {
-  type_atom atom, pair;
+  type_atom atom;
+  type_atom pair;
 
   pair = symbol_table;
   while (pair.type != NIL) {

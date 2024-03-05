@@ -47,8 +47,9 @@ int fn_parse_atom(const char *start, const char *end, type_atom *result) {
   buffer = malloc(end - start + 1);
   pair = buffer;
   while (start != end) {
-    // FIX
-    *pair++ = tolower(*start), ++start;
+    *pair = tolower(*start);
+    start++;
+    pair++;
   }
   // add null char to the end of the symbol
   *pair = '\0';
