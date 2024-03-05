@@ -23,6 +23,9 @@ int main() {
     case SYNTAX_ERR:
       puts("(!) Syntax error");
       break;
+    case UNDEFINED_SYMBOL_ERR:
+      puts("(!) Undefined symbol error");
+      break;
     }
 
     free(input);
