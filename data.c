@@ -29,6 +29,8 @@ type_atom fn_make_symbol(const char *string) {
   type_atom atom;
   type_atom pair;
 
+  // check if the symbol already exists,
+  // and return if so
   pair = symbol_table;
   while (pair.type != NIL) {
     atom = head(pair);
