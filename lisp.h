@@ -34,13 +34,14 @@ type_atom fn_make_int(long integer);
 type_atom fn_make_symbol(const char *string);
 type_atom fn_make_env(type_atom outer);
 
-int fn_get_from_env(type_atom env, type_atom symbol, type_atom *result);
-int fn_set_into_env(type_atom env, type_atom symbol, type_atom value);
-
 int fn_lex(const char *string, const char **start, const char **end);
 int fn_parse_atom(const char *start, const char *end, type_atom *result);
 int fn_parse_list(const char *start, const char **end, type_atom *result);
 int fn_read(const char *input, const char **end, type_atom *result);
+
+int fn_get_from_env(type_atom env, type_atom symbol, type_atom *result);
+int fn_set_into_env(type_atom env, type_atom symbol, type_atom value);
+int fn_check_if_proper_list(type_atom expr);
 
 void fn_print(type_atom atom);
 

@@ -41,3 +41,15 @@ int fn_set_into_env(type_atom env, type_atom symbol, type_atom value) {
 
   return NO_ERROR;
 }
+
+int fn_check_if_proper_list(type_atom expr) {
+  // traverse the list and return 0 if any of the tails
+  // is not a pair or nil (end of the list)
+  while (expr.type != NIL) {
+    if (expr.type != PAIR) {
+      return 0;
+    }
+    expr = tail(expr);
+  }
+  return 1;
+}
