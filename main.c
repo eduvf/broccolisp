@@ -7,17 +7,22 @@
 
 int main() {
   char *input;
+  type_atom env = fn_make_env(nil);
 
   while ((input = readline("? ")) != NULL) {
     const char *p = input;
     type_error error;
-    type_atom expr;
+    type_atom expr, result;
 
     error = fn_read(p, &p, &expr);
 
+    if (!error) {
+      error = fn_eval(expr, env, &result);
+    }
+
     switch (error) {
     case NO_ERROR:
-      fn_print(expr);
+      fn_print(result);
       puts("");
       break;
     case SYNTAX_ERROR:

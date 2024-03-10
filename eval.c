@@ -107,7 +107,7 @@ int fn_eval(type_atom expr, type_atom env, type_atom *result) {
 
       // second argument is evaluated
       type_atom value;
-      error = fn_eval(tail(tail(arguments)), env, &value);
+      error = fn_eval(head(tail(arguments)), env, &value);
       if (error) {
         return error;
       }
