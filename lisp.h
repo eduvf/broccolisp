@@ -1,7 +1,14 @@
 #ifndef LISP
 #define LISP
 
-typedef enum { NO_ERROR, SYNTAX_ERROR, UNDEFINED_SYMBOL_ERROR } type_error;
+typedef enum {
+  NO_ERROR,
+  SYNTAX_ERROR,
+  UNDEFINED_SYMBOL_ERROR,
+  EVAL_NO_BINDING_ERROR,
+  ARGUMENT_NUMBER_ERROR,
+  TYPE_ERROR
+} type_error;
 
 struct struct_atom {
   enum {

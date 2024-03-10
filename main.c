@@ -26,6 +26,15 @@ int main() {
     case UNDEFINED_SYMBOL_ERROR:
       puts("(!) Undefined symbol error");
       break;
+    case EVAL_NO_BINDING_ERROR:
+      puts("(!) Can't evaluate symbol without binding");
+      break;
+    case ARGUMENT_NUMBER_ERROR:
+      puts("(!) Arguments number error");
+      break;
+    case TYPE_ERROR:
+      puts("(!) Unexpected type error");
+      break;
     }
 
     free(input);
