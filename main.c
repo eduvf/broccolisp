@@ -40,6 +40,9 @@ int main() {
     case TYPE_ERROR:
       puts("(!) Unexpected type error");
       break;
+    case QUIT_ERROR:
+      free(input);
+      return 0;
     }
 
     free(input);

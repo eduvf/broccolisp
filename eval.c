@@ -80,7 +80,7 @@ int fn_eval(type_atom expr, type_atom env, type_atom *result) {
   arguments = tail(expr);
 
   if (operation.type == SYMBOL) {
-    // check for special forms (quote & define)
+    // check for special forms
 
     if (strcmp(operation.value.symbol, "quote") == 0) {
       // quote requires a single argument
@@ -114,6 +114,11 @@ int fn_eval(type_atom expr, type_atom env, type_atom *result) {
 
       *result = symbol;
       return fn_set_into_env(env, symbol, value);
+    }
+
+    if (strcmp(operation.value.symbol, "quit") == 0) {
+      // quit the program
+      return QUIT_ERROR;
     }
   }
 

@@ -7,7 +7,8 @@ typedef enum {
   UNDEFINED_SYMBOL_ERROR,
   EVAL_NO_BINDING_ERROR,
   ARGUMENT_NUMBER_ERROR,
-  TYPE_ERROR
+  TYPE_ERROR,
+  QUIT_ERROR
 } type_error;
 
 struct struct_atom {
