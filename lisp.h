@@ -49,6 +49,7 @@ int fn_read(const char *input, const char **end, type_atom *result);
 int fn_get_from_env(type_atom env, type_atom symbol, type_atom *result);
 int fn_set_into_env(type_atom env, type_atom symbol, type_atom value);
 int fn_check_if_proper_list(type_atom expr);
+int fn_eval(type_atom expr, type_atom env, type_atom *result);
 
 void fn_print(type_atom atom);
 

@@ -1,4 +1,5 @@
 #include "lisp.h"
+#include <string.h>
 
 int fn_get_from_env(type_atom env, type_atom symbol, type_atom *result) {
   type_atom outer = head(env);
@@ -52,4 +53,69 @@ int fn_check_if_proper_list(type_atom expr) {
     expr = tail(expr);
   }
   return 1;
+}
+
+int fn_eval(type_atom expr, type_atom env, type_atom *result) {
+  type_atom operation;
+  type_atom arguments;
+  type_error error;
+
+  if (expr.type == SYMBOL) {
+    // evaluate the symbol into result and return error
+    return fn_get_from_env(env, expr, result);
+  }
+
+  if (expr.type != PAIR) {
+    // is integer
+    *result = expr;
+    return NO_ERROR;
+  }
+
+  if (!fn_check_if_proper_list(expr)) {
+    // has to be a proper list to evaluate
+    return SYNTAX_ERROR;
+  }
+
+  operation = head(expr);
+  arguments = tail(expr);
+
+  if (operation.type == SYMBOL) {
+    // check for special forms (quote & define)
+
+    if (strcmp(operation.value.symbol, "quote") == 0) {
+      // quote requires a single argument
+      if (arguments.type == NIL || tail(arguments).type != NIL) {
+        return ARGUMENT_NUMBER_ERROR;
+      }
+      // put the argument into result without evaluation
+      *result = head(arguments);
+      return NO_ERROR;
+    }
+
+    if (strcmp(operation.value.symbol, "define") == 0) {
+      // define requires two arguments
+      if (arguments.type == NIL || tail(arguments).type == NIL ||
+          tail(tail(arguments)).type != NIL) {
+        return ARGUMENT_NUMBER_ERROR;
+      }
+
+      // first argument has to be a symbol
+      type_atom symbol = head(arguments);
+      if (symbol.type != SYMBOL) {
+        return TYPE_ERROR;
+      }
+
+      // second argument is evaluated
+      type_atom value;
+      error = fn_eval(tail(tail(arguments)), env, &value);
+      if (error) {
+        return error;
+      }
+
+      *result = symbol;
+      return fn_set_into_env(env, symbol, value);
+    }
+  }
+
+  return SYNTAX_ERROR;
 }
