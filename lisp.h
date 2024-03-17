@@ -11,17 +11,24 @@ typedef enum {
   QUIT_ERROR
 } type_error;
 
+struct struct_atom;
+
+typedef struct struct_atom type_atom;
+typedef int (*type_function)(type_atom arguments, type_atom *result);
+
 struct struct_atom {
   enum {
     NIL,
     PAIR,
     SYMBOL,
     INTEGER,
+    FUNCTION,
   } type;
   union {
     struct struct_pair *pair;
     const char *symbol;
     long integer;
+    type_function function;
   } value;
 };
 
@@ -29,8 +36,6 @@ struct struct_pair {
   struct struct_atom head;
   struct struct_atom tail;
 };
-
-typedef struct struct_atom type_atom;
 
 static const type_atom nil = {};
 

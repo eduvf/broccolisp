@@ -32,5 +32,8 @@ void fn_print(type_atom atom) {
   case INTEGER:
     printf("%ld", atom.value.integer);
     break;
+  case FUNCTION:
+    printf("%p", atom.value.function);
+    break;
   }
 }
