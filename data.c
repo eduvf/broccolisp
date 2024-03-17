@@ -46,6 +46,15 @@ type_atom fn_make_symbol(const char *string) {
   return atom;
 }
 
+type_atom fn_make_function(type_function function) {
+  type_atom atom;
+
+  atom.type = FUNCTION;
+  atom.value.function = function;
+
+  return atom;
+}
+
 type_atom fn_make_env(type_atom outer) {
   // create empty environment
   return fn_make_pair(outer, nil);
