@@ -55,9 +55,18 @@ int fn_check_if_proper_list(type_atom expr) {
   return 1;
 }
 
+int fn_apply(type_atom function, type_atom args, type_atom *result) {
+  // check for a built-in function
+  if (function.type == FUNCTION) {
+    return (*function.value.function)(args, result);
+  }
+  return TYPE_ERROR;
+}
+
 int fn_eval(type_atom expr, type_atom env, type_atom *result) {
   type_atom operation;
   type_atom arguments;
+  type_atom pair;
   type_error error;
 
   if (expr.type == SYMBOL) {
@@ -122,5 +131,23 @@ int fn_eval(type_atom expr, type_atom env, type_atom *result) {
     }
   }
 
-  return SYNTAX_ERROR;
+  // check for a function
+  // try to override the operation with its value
+  error = fn_eval(operation, env, &operation);
+  if (error) {
+    return error;
+  }
+
+  // copy and iterate the argument list, while evaluating it
+  arguments = fn_list_shallow_copy(arguments);
+  pair = arguments;
+  while (pair.type != NIL) {
+    error = fn_eval(head(pair), env, &head(pair));
+    if (error) {
+      return error;
+    }
+    pair = tail(pair);
+  }
+
+  return fn_apply(operation, arguments, result);
 }
