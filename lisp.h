@@ -60,6 +60,10 @@ int fn_check_if_proper_list(type_atom expr);
 int fn_apply(type_atom function, type_atom args, type_atom *result);
 int fn_eval(type_atom expr, type_atom env, type_atom *result);
 
+int fn_lisp_car(type_atom args, type_atom *result);
+int fn_lisp_cdr(type_atom args, type_atom *result);
+int fn_lisp_cons(type_atom args, type_atom *result);
+
 void fn_print(type_atom atom);
 
 #endif
