@@ -47,6 +47,8 @@ type_atom fn_make_int(long integer);
 type_atom fn_make_symbol(const char *string);
 type_atom fn_make_env(type_atom outer);
 
+type_atom fn_list_shallow_copy(type_atom list);
+
 int fn_lex(const char *string, const char **start, const char **end);
 int fn_parse_atom(const char *start, const char *end, type_atom *result);
 int fn_parse_list(const char *start, const char **end, type_atom *result);

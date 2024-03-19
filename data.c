@@ -59,3 +59,26 @@ type_atom fn_make_env(type_atom outer) {
   // create empty environment
   return fn_make_pair(outer, nil);
 }
+
+type_atom fn_list_shallow_copy(type_atom list) {
+  type_atom atom;
+  type_atom pair;
+
+  // check for an empty list (no need to copy)
+  if (list.type == NIL) {
+    return nil;
+  }
+
+  atom = fn_make_pair(head(list), nil);
+  pair = atom;
+  list = tail(list);
+
+  // go through all atoms in list and copy them into pair
+  while (list.type != NIL) {
+    tail(pair) = fn_make_pair(head(list), nil);
+    pair = tail(pair);
+    list = tail(list);
+  }
+
+  return atom;
+}
