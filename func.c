@@ -46,4 +46,8 @@ int fn_lisp_cons(type_atom args, type_atom *result) {
       tail(tail(args)).type != NIL) {
     return ARGUMENT_NUMBER_ERROR;
   }
+
+  *result = fn_make_pair(head(args), head(tail(args)));
+
+  return NO_ERROR;
 }
