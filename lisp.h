@@ -45,6 +45,7 @@ static const type_atom nil = {};
 type_atom fn_make_pair(type_atom head, type_atom tail);
 type_atom fn_make_int(long integer);
 type_atom fn_make_symbol(const char *string);
+type_atom fn_make_function(type_function function);
 type_atom fn_make_env(type_atom outer);
 
 type_atom fn_list_shallow_copy(type_atom list);

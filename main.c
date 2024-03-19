@@ -9,6 +9,10 @@ int main() {
   char *input;
   type_atom env = fn_make_env(nil);
 
+  fn_set_into_env(env, fn_make_symbol("car"), fn_make_function(fn_lisp_car));
+  fn_set_into_env(env, fn_make_symbol("cdr"), fn_make_function(fn_lisp_cdr));
+  fn_set_into_env(env, fn_make_symbol("cons"), fn_make_function(fn_lisp_cons));
+
   while ((input = readline("? ")) != NULL) {
     const char *p = input;
     type_error error;
